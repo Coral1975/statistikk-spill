@@ -1,0 +1,625 @@
+/* ==========================================================================
+   estilo.css – Sistema de diseño común (Juegos de estadística, idrettsvitenskap)
+   Sin dependencias, sin CDN. Fuentes del sistema. Ver GUIA_VISUAL.md.
+   Índice: 1 Tokens · 2 Base · 3 Layout · 4 Botones · 5 Tarjetas/callouts
+           6 Progreso · 7 Estrellas · 8 Badges · 9 Tillitsnivå · 10 Slider
+           11 Utfordringskort · 12 Klassetavla · 13 Modal · 14 Motion
+           15 Visualizaciones animadas · 16 Print · 17 Reduced motion
+   ========================================================================== */
+
+/* 1. TOKENS ---------------------------------------------------------------- */
+:root {
+  color-scheme: light dark;
+
+  /* Paleta (texto sobre fondo >= 4.5:1; comprobada a mano para AA) */
+  --c-bg:        #F1EDE3;  /* pergamino */
+  --c-surface:   #FFFCF5;
+  --c-surface-2: #E8E2D3;
+  --c-ink:       #14202E;   /* texto principal   (14.9:1 sobre surface) */
+  --c-ink-soft:  #4A5260;   /* texto secundario  (7.6:1) */
+  --c-line:      #C9BFA8;
+
+  --c-primary:      #0B7A6B;  /* verde bane/teal (5.2:1 con blanco) */
+  --c-primary-dark: #075B50;
+  --c-primary-soft: #D6F0EB;
+  --c-accent:       #C2410C;  /* oransje (5.2:1 con blanco) */
+  --c-accent-soft:  #FDE6D8;
+  --c-info:         #2F5DA8;  /* blått (6.6:1 con blanco) */
+  --c-info-soft:    #DCE7F8;
+  --c-warn:         #8A5A00;
+  --c-warn-soft:    #FFF1CC;
+  --c-good:         #15803D;
+  --c-bad:          #B42318;
+
+  /* Materiales nórdicos */
+  --c-wood:  #6B4423;   /* madera (7.7:1 con blanco) */
+  --c-wood-soft: #B08A4A;
+  --c-iron:  #3B4452;   /* hierro */
+  --c-fjord: #0F2A3F;   /* fiordo nocturno */
+  --c-aurora-1: #2BD9B0; --c-aurora-2: #5AA9FF; --c-aurora-3: #B48CFF;
+  --knot: url("assets/knute.svg");
+
+  --c-star-on:       #F5B700;
+  --c-star-on-edge:  #7A5A00;
+  --c-star-off:      #E6EAF0;
+  --c-star-off-edge: #5B6678;
+
+  /* Paleta categórica apta para daltonismo (Okabe-Ito adaptada): grupos A/B/C */
+  --c-grp-a: #D55E00;  /* HIIT      – naranja rojizo */
+  --c-grp-b: #0072B2;  /* Moderat   – azul */
+  --c-grp-c: #6B7280;  /* Kontroll  – gris (además usa forma distinta: ● ■ ▲) */
+
+  /* Tipografía (fuentes del sistema, sin descargas) */
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+  --fs-sm: 1rem;       /* mínimo 16 px */
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: clamp(1.9rem, 4vw + 1rem, 2.8rem);
+  --lh: 1.5;
+
+  /* Espaciado, forma, sombra */
+  --sp-1: .25rem; --sp-2: .5rem; --sp-3: .75rem; --sp-4: 1rem;
+  --sp-5: 1.5rem; --sp-6: 2rem; --sp-7: 3rem;
+  --r-sm: .5rem; --r-md: .875rem; --r-lg: 1.25rem; --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(16,36,62,.10), 0 2px 8px rgba(16,36,62,.06);
+  --shadow-2: 0 6px 24px rgba(16,36,62,.16);
+  --focus: 0 0 0 3px var(--c-surface), 0 0 0 6px var(--c-info);
+
+  /* Motion */
+  --t-fast: 120ms; --t-med: 280ms; --t-slow: 700ms;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --ease-pop: cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Modo oscuro: automático por preferencia del sistema, o forzado con data-theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-bg:#0C1626; --c-surface:#14233A; --c-surface-2:#1C3050;
+    --c-ink:#EAF1FA; --c-ink-soft:#AEBDD1; --c-line:#33496A;
+    --c-primary:#35C2AE; --c-primary-dark:#7FE0D1; --c-primary-soft:#12403B;
+    --c-accent:#FF9A5C; --c-accent-soft:#4A2A16;
+    --c-info:#8DB4F5; --c-info-soft:#1B2F52;
+    --c-warn:#F5C451; --c-warn-soft:#3F3210;
+    --c-good:#5DD28A; --c-bad:#FF8A80;
+    --c-star-off:#2A3C58; --c-star-off-edge:#9DB0CA; --c-wood:#D3A66B; --c-wood-soft:#8C6B3C; --c-iron:#7F8CA0; --c-fjord:#050E18;
+    --c-grp-a:#FF9A5C; --c-grp-b:#6CB6F0; --c-grp-c:#B4BCC8;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 28px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"] {
+  --c-bg:#0C1626; --c-surface:#14233A; --c-surface-2:#1C3050;
+  --c-ink:#EAF1FA; --c-ink-soft:#AEBDD1; --c-line:#33496A;
+  --c-primary:#35C2AE; --c-primary-dark:#7FE0D1; --c-primary-soft:#12403B;
+  --c-accent:#FF9A5C; --c-accent-soft:#4A2A16;
+  --c-info:#8DB4F5; --c-info-soft:#1B2F52;
+  --c-warn:#F5C451; --c-warn-soft:#3F3210;
+  --c-good:#5DD28A; --c-bad:#FF8A80;
+  --c-star-off:#2A3C58; --c-star-off-edge:#9DB0CA; --c-wood:#D3A66B; --c-wood-soft:#8C6B3C; --c-iron:#7F8CA0; --c-fjord:#050E18;
+  --c-grp-a:#FF9A5C; --c-grp-b:#6CB6F0; --c-grp-c:#B4BCC8;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 28px rgba(0,0,0,.5);
+}
+
+/* 2. BASE ------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--c-bg); color: var(--c-ink);
+  font: var(--fs-md)/var(--lh) var(--font-body);
+}
+h1,h2,h3,h4 { font-family: var(--font-display); line-height: 1.2; margin: 0 0 var(--sp-3); }
+h1 { font-size: var(--fs-2xl); } h2 { font-size: var(--fs-xl); } h3 { font-size: var(--fs-lg); }
+p { margin: 0 0 var(--sp-3); }
+a { color: var(--c-info); text-underline-offset: .15em; }
+code, kbd, .mono { font-family: var(--font-mono); font-size: .95em; }
+kbd { background: var(--c-surface-2); border: 1px solid var(--c-line); border-bottom-width: 2px; border-radius: .3rem; padding: 0 .35em; }
+:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-sm); }
+.sr-only { position:absolute!important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.skip-link { position:absolute; left:0; top:0; transform:translateY(-200%); max-width:calc(100vw - 1rem); background:var(--c-ink); color:var(--c-bg); padding:.5rem 1rem; z-index:100; }
+.skip-link:focus { transform:none; }
+/* Foco PROGRAMATICO en titulos y en <main> (el juego lo mueve al cambiar de pantalla, para lectores de pantalla): sin recuadro.
+   Los controles (botones, campos, enlaces) conservan su anillo de foco. */
+h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, h3[tabindex="-1"]:focus, main[tabindex="-1"]:focus,
+h1[tabindex="-1"]:focus-visible, h2[tabindex="-1"]:focus-visible, h3[tabindex="-1"]:focus-visible, main[tabindex="-1"]:focus-visible { outline: none; box-shadow: none; }
+.muted { color: var(--c-ink-soft); }
+.linkbtn { font: inherit; background: none; border: 0; color: var(--c-info); text-decoration: underline; cursor: pointer; min-height: 2.75rem; padding: 0 .25rem; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* 3. LAYOUT ---------------------------------------------------------------- */
+.container { width: min(100% - 2rem, 62rem); margin-inline: auto; }
+.container--narrow { width: min(100% - 2rem, 40rem); margin-inline: auto; }
+.stack > * + * { margin-top: var(--sp-4); }
+.row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.row--between { justify-content: space-between; }
+.grid { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+
+.app-header {
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-4);
+  position: relative; overflow: hidden; color: #fff;
+  background:
+    linear-gradient(105deg, transparent 20%, rgba(43,217,176,.28) 40%, rgba(90,169,255,.25) 60%, rgba(180,140,255,.22) 80%, transparent),
+    var(--c-fjord);
+  background-size: 200% 100%, auto; animation: aurora 14s ease-in-out infinite alternate;
+  border-bottom: 6px solid var(--c-wood);
+}
+.app-header img, .app-header svg { width: 2.75rem; height: 2.75rem; }
+.app-header h1 { margin: 0; font-size: var(--fs-xl); color: #fff; }
+.app-header .tagline { margin: 0; opacity: .9; font-size: var(--fs-sm); }
+.app-header .spacer { flex: 1; }
+.stepper { display:flex; gap:var(--sp-2); list-style:none; margin:0; padding:0; flex-wrap:wrap; }
+.stepper li { padding:.25rem .75rem; border-radius:var(--r-pill); background:rgba(255,255,255,.18); color:#fff; font-weight:600; font-size:var(--fs-sm); }
+.stepper li[aria-current="step"] { background:#fff; color:var(--c-fjord); }
+.stepper li.is-done::before { content:"\2713\00a0"; }
+
+/* 4. BOTONES --------------------------------------------------------------- */
+.btn {
+  --_bg: var(--c-surface); --_fg: var(--c-ink); --_bd: var(--c-line);
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 2.75rem; padding: .5rem 1.1rem;
+  font: 600 var(--fs-md)/1.2 var(--font-body);
+  color: var(--_fg); background: var(--_bg);
+  border: 2px solid var(--_bd); border-radius: var(--r-md);
+  cursor: pointer; text-decoration: none;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast), background var(--t-fast);
+  box-shadow: 0 2px 0 var(--_bd);
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--_bd); }
+.btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--_bd); }
+.btn--primary { --_bg: var(--c-primary); --_fg: #fff; --_bd: var(--c-primary-dark); }
+:root[data-theme="dark"] .btn--primary { --_fg: #04201C; }
+/* Lo mismo con el modo oscuro AUTOMATICO del sistema (sin data-theme): texto oscuro sobre turquesa claro, contraste >= 4,5:1 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn--primary { --_fg: #04201C; }
+  :root:not([data-theme="light"]) .btn--accent { --_fg: #2A1204; --_bd: #C2410C; }
+}
+.btn--accent  { --_bg: var(--c-accent);  --_fg: #fff; --_bd: #8F3008; }
+:root[data-theme="dark"] .btn--accent { --_fg: #2A1204; --_bd:#C2410C; }
+.btn--ghost   { --_bg: transparent; --_bd: transparent; box-shadow: none; }
+.btn--lg { min-height: 3.25rem; font-size: var(--fs-lg); padding-inline: 1.6rem; }
+.btn--sm { min-height: 2.25rem; padding: .25rem .8rem; font-size: var(--fs-sm); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* 5. TARJETAS, CHIPS, CALLOUTS -------------------------------------------- */
+.card {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); padding: var(--sp-5); box-shadow: var(--shadow-1);
+}
+.card--accent { border-top: 6px solid var(--c-primary); }
+.card--stone { background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface)); border: 2px solid var(--c-iron); border-radius: var(--r-md) var(--r-md) var(--r-lg) var(--r-lg); position: relative; margin-top: .9rem; }
+.card--stone::before { content: attr(data-rune); position: absolute; top: -.9rem; left: 1rem; padding: 0 .6rem; background: var(--c-iron); color: #fff; border-radius: var(--r-sm); font-size: 1.3rem; line-height: 1.6rem; }
+.card__title { margin-bottom: var(--sp-2); }
+.chip {
+  display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .7rem;
+  border-radius: var(--r-pill); background: var(--c-surface-2); color: var(--c-ink);
+  font-weight: 600; font-size: var(--fs-sm); border: 1px solid var(--c-line);
+}
+.chip--role { background: var(--c-info-soft); border-color: var(--c-info); }
+.chip--grp-a::before { content:"\25CF"; color:var(--c-grp-a); }   /* ● HIIT */
+.chip--grp-b::before { content:"\25A0"; color:var(--c-grp-b); }   /* ■ Moderat */
+.chip--grp-c::before { content:"\25B2"; color:var(--c-grp-c); }   /* ▲ Kontroll */
+
+.callout {
+  --_c: var(--c-info); --_bg: var(--c-info-soft);
+  /* Icono (::before) en la 1a columna; TODOS los hijos (1 o varios <p>) se apilan en la 2a, que ocupa el ancho restante.
+     Antes los hijos 2+ caian en la columna estrecha "auto" bajo el icono y dejaban un hueco vacio. */
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--sp-3); row-gap: var(--sp-2);
+  align-items: start;
+  padding: var(--sp-4); border-radius: var(--r-md);
+  background: var(--_bg); border-left: 6px solid var(--_c);
+}
+.callout::before { content: "\2139"; grid-column: 1; grid-row: 1; font-weight: 800; font-size: 1.4rem; color: var(--_c); line-height: 1; }
+.callout > * { grid-column: 2; margin-block: 0; min-width: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout--hint  { --_c: var(--c-warn);   --_bg: var(--c-warn-soft); }
+.callout--hint::before  { content: "\1F4A1"; }
+.callout--ok    { --_c: var(--c-good);   --_bg: var(--c-primary-soft); }
+.callout--ok::before    { content: "\2713"; }
+.callout--trap  { --_c: var(--c-accent); --_bg: var(--c-accent-soft); }
+.callout--trap::before  { content: "\26A0"; }
+.callout--rules { --_c: var(--c-primary); --_bg: var(--c-primary-soft); }
+.callout--rules::before { content: "\1F3C1"; }
+
+.feedback { animation: fb-in var(--t-med) var(--ease) both; }
+.feedback--correct { border-left: 6px solid var(--c-good); }
+.feedback--wrong   { border-left: 6px solid var(--c-accent); }   /* naranja, nunca rojo punitivo */
+
+/* Marcador "frase de reporte" (fase Rapporter) */
+.report-sentence {
+  font-family: var(--font-body); background: var(--c-surface-2);
+  border: 1px dashed var(--c-ink-soft); border-radius: var(--r-md);
+  padding: var(--sp-4); font-size: var(--fs-lg);
+}
+.report-sentence .slot { padding: 0 .35em; border-radius: .3rem; background: var(--c-warn-soft); border-bottom: 2px solid var(--c-warn); }
+.report-sentence .slot.is-filled { background: var(--c-primary-soft); border-color: var(--c-primary); }
+.checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.checklist li { padding: .15rem .7rem; border-radius: var(--r-pill); border: 1px solid var(--c-line); font-weight: 600; }
+.checklist li.is-yes { background: var(--c-primary-soft); border-color: var(--c-primary); }
+.checklist li.is-yes::before { content: "\2714\00a0"; color: var(--c-good); }
+.checklist li.is-no  { background: var(--c-accent-soft); border-color: var(--c-accent); }
+.checklist li.is-no::before  { content: "\2718\00a0"; color: var(--c-accent); }
+.checklist li.is-warn { background: var(--c-warn-soft); border-color: var(--c-warn); }
+.checklist li.is-warn::before { content: "\26A0\00a0"; }
+/* Medallas con tres estados (Ikke ennå / Nesten / Oppnådd): el estado va SIEMPRE en texto (.badge__state), no solo en el color */
+.badge--ikke .badge__medal { filter: grayscale(1) opacity(.45); }
+.badge--nesten .badge__medal { filter: grayscale(.55) opacity(.8); }
+.badge__state { font-size: var(--fs-sm); font-weight: 700; }
+/* Boton de accion unico con razon visible bajo el boton; linea fija del signo de Jamovi; premisa; ecuacion de puntos */
+.gate { margin-top: var(--sp-4); }
+.gate__why { margin: .4rem 0 0; color: var(--c-ink-soft); }
+.signline { margin: 0 0 var(--sp-2); font-weight: 600; }
+.premise { margin: var(--sp-1) 0 0; }
+.eqline { font-size: var(--fs-lg); margin: 0 0 var(--sp-2); }
+
+/* 6. PROGRESO -------------------------------------------------------------- */
+.progress {
+  --value: 0;     /* 0-100 */
+  position: relative; height: 1rem; border-radius: var(--r-pill);
+  background: var(--c-surface-2); border: 1px solid var(--c-line); overflow: hidden;
+}
+.progress__bar {
+  display: block; height: 100%; width: calc(var(--value) * 1%);
+  background: repeating-linear-gradient(-45deg, var(--c-primary) 0 10px, var(--c-primary-dark) 10px 20px);
+  border-radius: inherit; transition: width var(--t-slow) var(--ease);
+}
+.progress--thick { height: 1.5rem; }
+.progress__label { display:flex; justify-content:space-between; font-size:var(--fs-sm); font-weight:600; margin-bottom:.25rem; }
+.round-dots { display:flex; gap:.4rem; list-style:none; margin:0; padding:0; }
+.round-dots li { width:1.1rem; height:1.1rem; border-radius:50%; border:2px solid var(--c-ink-soft); }
+.round-dots li.is-done { background: var(--c-primary); border-color: var(--c-primary-dark); }
+.round-dots li.is-current { border-color: var(--c-info); box-shadow: 0 0 0 3px var(--c-info-soft); }
+
+/* 7. ESTRELLAS (Velg / Kjør / Rapporter) ---------------------------------- */
+.star {
+  --size: 2.25rem;
+  position: relative; display: inline-block; width: var(--size); height: var(--size); flex: none;
+  clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  background: var(--c-star-off-edge);
+}
+.star::after {
+  content: ""; position: absolute; inset: 3px;
+  clip-path: inherit; background: var(--c-star-off);
+}
+.star.is-on { background: var(--c-star-on-edge); }
+.star.is-on::after { background: var(--c-star-on); }
+.stars { display: flex; flex-wrap: wrap; gap: var(--sp-4); list-style: none; margin: 0; padding: 0; }
+.stars__item { display: flex; align-items: center; gap: var(--sp-2); font-weight: 700; }
+.stars__item small { display:block; font-weight:500; color:var(--c-ink-soft); font-size:var(--fs-sm); }
+.stars__item:not(.is-on) .stars__name { text-decoration: none; opacity: .85; }
+/* Animación al encender: añadir .is-lighting a .stars (cada estrella usa --i para el retardo) */
+.stars.is-lighting .star.is-on { animation: star-pop 650ms var(--ease-pop) both; animation-delay: calc(var(--i, 0) * 350ms); }
+.stars.is-lighting .star.is-on::after { animation: star-shine 900ms ease-out both; animation-delay: calc(var(--i, 0) * 350ms); }
+.star-total { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 800; }
+
+/* 8. BADGES DE GRUPO ------------------------------------------------------- */
+.badge-grid { display:grid; gap:var(--sp-4); grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr)); list-style:none; margin:0; padding:0; }
+.badge { display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--sp-2); }
+.badge__medal { width: 4.5rem; height: 4.5rem; filter: drop-shadow(0 3px 4px rgba(16,36,62,.25)); }
+.badge__name { font-weight: 700; line-height: 1.2; }
+.badge__desc { font-size: var(--fs-sm); color: var(--c-ink-soft); }
+.badge.is-locked .badge__medal { filter: grayscale(1) opacity(.45); }
+.badge.is-locked .badge__name::after { content: " (ikke låst opp)"; font-weight: 500; color: var(--c-ink-soft); }
+.badge.is-new .badge__medal { animation: badge-unlock 900ms var(--ease-pop) both; }
+.badge-chip { display:inline-flex; align-items:center; gap:.4rem; padding:.15rem .8rem .15rem .2rem; border-radius:var(--r-pill); background:var(--c-warn-soft); border:1px solid var(--c-warn); font-weight:700; }
+.badge-chip img { width:1.8rem; height:1.8rem; }
+
+/* Confeti sobrio: contenedor posicionado; piezas generadas con fx.js o a mano */
+.confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.confetti i {
+  position:absolute; top:-10%; left:var(--x,50%); width:.6rem; height:1rem;
+  background:var(--k, var(--c-primary)); opacity:0;
+  animation: confetti-fall var(--d,1800ms) ease-in var(--dl,0ms) 1 both;
+}
+.confetti i:nth-child(3n)   { --k: var(--c-star-on); }
+.confetti i:nth-child(3n+1) { --k: var(--c-info); border-radius: 50%; width:.7rem; height:.7rem; }
+.confetti i:nth-child(3n+2) { --k: var(--c-accent); }
+
+/* 9. TILLITSNIVÅ (Usikker / Ganske sikker / Helt sikker) ------------------- */
+.confidence { border: 0; padding: 0; margin: 0; }
+.confidence legend { font-weight: 700; margin-bottom: var(--sp-2); padding: 0; }
+.confidence__opts { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.confidence__opt input { position: absolute; opacity: 0; }
+.confidence__opt label {
+  display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .4rem 1rem;
+  border: 2px solid var(--c-line); border-radius: var(--r-md); background: var(--c-surface);
+  font-weight: 600; cursor: pointer; transition: background var(--t-fast), border-color var(--t-fast);
+}
+/* indicador no cromático: 1, 2 o 3 puntos */
+.confidence__opt label::before { content: attr(data-level); letter-spacing: .1em; color: var(--c-info); font-size: .8em; }
+.confidence__opt input:checked + label { background: var(--c-info-soft); border-color: var(--c-info); box-shadow: inset 0 0 0 1px var(--c-info); }
+.confidence__opt input:checked + label::after { content: "\2713"; }
+.confidence__opt input:focus-visible + label { box-shadow: var(--focus); }
+.meter { display:flex; align-items:center; gap:var(--sp-3); }   /* Magefølelse-måler */
+.meter__track { flex:1; display:flex; gap:4px; }
+.meter__cell { flex:1; height:1.1rem; border-radius:4px; border:2px solid var(--c-ink-soft); }
+.meter__cell.is-right { background: var(--c-primary); border-color: var(--c-primary-dark); }
+.meter__cell.is-miss  { background: repeating-linear-gradient(45deg, var(--c-accent-soft) 0 5px, var(--c-accent) 5px 7px); border-color: var(--c-accent); }
+
+/* 10. CONTROLES DESLIZANTES ----------------------------------------------- */
+.slider { display:grid; gap:var(--sp-1); }
+.slider__head { display:flex; justify-content:space-between; font-weight:600; }
+.slider input[type="range"] { width:100%; height:2.5rem; background:transparent; accent-color: var(--c-primary); cursor:pointer; }
+.slider input[type="range"]::-webkit-slider-runnable-track { height:.6rem; border-radius:var(--r-pill); background:var(--c-surface-2); border:1px solid var(--c-line); }
+.slider input[type="range"]::-moz-range-track { height:.6rem; border-radius:var(--r-pill); background:var(--c-surface-2); border:1px solid var(--c-line); }
+.slider input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:1.75rem; height:1.75rem; margin-top:-.7rem; border-radius:50%; background:var(--c-primary); border:3px solid var(--c-surface); box-shadow:0 0 0 2px var(--c-primary-dark), var(--shadow-1); }
+.slider input[type="range"]::-moz-range-thumb { width:1.5rem; height:1.5rem; border-radius:50%; background:var(--c-primary); border:3px solid var(--c-surface); box-shadow:0 0 0 2px var(--c-primary-dark); }
+.slider input[type="range"]:focus-visible { box-shadow: var(--focus); }
+.field { display:grid; gap:var(--sp-1); }
+.field label { font-weight:600; }
+.field input[type="text"], .field select, .field textarea {
+  font: inherit; color: var(--c-ink); background: var(--c-surface); min-height: 2.75rem;
+  padding: .5rem .8rem; border: 2px solid var(--c-line); border-radius: var(--r-md);
+}
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { box-shadow: var(--focus); border-color: var(--c-info); }
+.field .hint { font-size: var(--fs-sm); color: var(--c-ink-soft); }
+
+/* 11. UTFORDRINGSKORT (tarjeta de reto) ----------------------------------- */
+.challenge-card {
+  position: relative; overflow: hidden; background: var(--c-surface);
+  border: 3px solid var(--c-primary); border-radius: var(--r-lg); box-shadow: var(--shadow-2);
+  max-width: 44rem; margin-inline: auto;
+}
+.challenge-card__head {
+  display:flex; justify-content:space-between; align-items:center; gap:var(--sp-3); flex-wrap:wrap;
+  padding: var(--sp-4) var(--sp-5); color:#fff;
+  background: linear-gradient(120deg, var(--c-primary-dark), var(--c-primary));
+}
+.challenge-card__head h2 { margin: 0; color:#fff; }
+.challenge-card__team { margin: 0; font-size: var(--fs-sm); opacity: .95; }
+.challenge-card__section { padding: var(--sp-4) var(--sp-5); border-top: 1px solid var(--c-line); }
+.challenge-card__section h3 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .06em; color: var(--c-ink-soft); margin-bottom: var(--sp-2); }
+.challenge-card__result { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 800; }
+.challenge-card__cols { display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4); }
+.challenge-card__foot { padding: var(--sp-3) var(--sp-5); background: var(--c-surface-2); font-size: var(--fs-sm); color: var(--c-ink-soft); }
+.challenge-card__actions { display:flex; flex-wrap:wrap; gap:var(--sp-2); padding: var(--sp-4) var(--sp-5); }
+.bullets { margin: 0; padding-left: 1.2rem; }
+.bullets--plus li::marker { content: "\2714\00a0"; color: var(--c-good); }
+.bullets--next li::marker { content: "\279C\00a0"; color: var(--c-info); }
+
+/* 12. KLASSETAVLA (marcador anónimo) + KLASSEMÅL -------------------------- */
+.classgoal { padding: var(--sp-4); border-radius: var(--r-lg); background: var(--c-info-soft); border: 2px solid var(--c-info); }
+.classgoal__text { display:flex; justify-content:space-between; gap:var(--sp-3); flex-wrap:wrap; font-weight:700; margin-bottom:var(--sp-2); }
+.classgoal.is-reached { background: var(--c-warn-soft); border-color: var(--c-warn); }
+.classgoal.is-reached .progress__bar { background: repeating-linear-gradient(-45deg, var(--c-star-on) 0 10px, #D99B00 10px 20px); }
+.classgoal__goalmark { position:absolute; right:0; top:0; bottom:0; width:4px; background:var(--c-ink); }
+.scoreboard { display:grid; grid-template-columns:repeat(auto-fill,minmax(13rem,1fr)); gap:var(--sp-3); list-style:none; margin:0; padding:0; }
+.scoreboard__team { background:var(--c-surface); border:1px solid var(--c-line); border-radius:var(--r-md); padding:var(--sp-3); box-shadow:var(--shadow-1); animation: fb-in var(--t-med) var(--ease) both; animation-delay: calc(var(--i,0) * 60ms); }
+.scoreboard__alias { font-weight:700; overflow-wrap:anywhere; }
+.scoreboard__game { font-size:var(--fs-sm); color:var(--c-ink-soft); }
+.scoreboard__stars { display:flex; gap:.25rem; margin-top:.35rem; }
+.scoreboard__stars .star { --size: 1.4rem; }
+.scoreboard__note { font-size:var(--fs-sm); color:var(--c-ink-soft); }
+.scoreboard-status { font-size:var(--fs-sm); }
+.scoreboard-status::before { content:"\25CF\00a0"; color:var(--c-good); }
+.scoreboard-status.is-offline::before { content:"\25CB\00a0"; color:var(--c-ink-soft); }
+
+
+.kt-bar{height:1.2rem;background:var(--c-surface-2);border-radius:var(--r-pill);overflow:hidden;border:1px solid var(--c-line)}
+.kt-bar span{display:block;height:100%;background:var(--c-primary);transition:width var(--t-slow) var(--ease)}
+.kt-list{list-style:none;padding:0}
+.kt-list li{border:1px solid var(--c-line);border-top:5px solid var(--c-wood);border-radius:var(--r-md);padding:.4rem .7rem;margin:.3rem 0}
+.kt-list li span{display:block}
+.kt-note,.kt-reward{font-size:var(--fs-sm);color:var(--c-ink-soft)}
+.kt-themes{margin-top:var(--sp-2)}.kt-themes ul{margin:.25rem 0 0;padding-left:1.25rem}.kt-themes summary{cursor:pointer;font-weight:600;min-height:2.75rem;padding-block:.5rem}
+
+/* 13. MODAL (elemento <dialog>) ------------------------------------------- */
+dialog.modal {
+  width: min(92vw, 34rem); padding: 0; border: 0; border-radius: var(--r-lg);
+  background: var(--c-surface); color: var(--c-ink); box-shadow: var(--shadow-2);
+}
+dialog.modal::backdrop { background: rgba(8,18,32,.6); }
+dialog.modal[open] { animation: modal-in var(--t-med) var(--ease) both; }
+.modal__body { padding: var(--sp-5); }
+.modal__foot { display:flex; justify-content:flex-end; gap:var(--sp-2); padding: var(--sp-3) var(--sp-5); background: var(--c-surface-2); }
+
+/* 14. MOTION: utilidades (transiciones entre rondas, reveal, feedback) ---- */
+.anim-slide-in  { animation: slide-in  var(--t-med) var(--ease) both; }
+.anim-slide-out { animation: slide-out var(--t-med) var(--ease) both; }
+.anim-reveal    { animation: reveal var(--t-slow) var(--ease) both; animation-delay: calc(var(--i, 0) * 150ms); }
+.anim-pop       { animation: star-pop 500ms var(--ease-pop) both; }
+.anim-shake     { animation: nudge 400ms ease-in-out both; }   /* temblor suave: "casi" (no castigo) */
+.anim-pulse     { animation: pulse 1.6s ease-in-out infinite; }
+.count-up {                                         /* número que cuenta hasta --to */
+  --n: var(--to, 0); counter-reset: n var(--n); font-variant-numeric: tabular-nums;
+}
+.count-up::after { content: counter(n); }
+@property --n { syntax: "<integer>"; inherits: false; initial-value: 0; }
+.count-up.is-counting { animation: count-up 1.2s var(--ease) both; }
+
+/* Entrada en vertical: con translateX(2rem) el contenido sobresalia 24 px por la derecha y en movil (390 px) el scrollWidth se quedaba en 414 (QA 6C, obs. 7) */
+@keyframes slide-in  { from { opacity:0; transform: translateY(.75rem); } to { opacity:1; transform:none; } }
+@keyframes slide-out { from { opacity:1; transform:none; } to { opacity:0; transform: translateX(-2rem); } }
+@keyframes fb-in     { from { opacity:0; transform: translateY(.5rem); } to { opacity:1; transform:none; } }
+@keyframes reveal    { from { opacity:0; transform: translateY(1rem) scale(.98); filter: blur(4px); } to { opacity:1; transform:none; filter:none; } }
+@keyframes modal-in  { from { opacity:0; transform: translateY(1rem) scale(.97); } to { opacity:1; transform:none; } }
+@keyframes star-pop  { 0% { transform: scale(.2) rotate(-40deg); } 70% { transform: scale(1.25) rotate(8deg); } 100% { transform: none; } }
+@keyframes star-shine{ from { filter: brightness(2.2); } to { filter: none; } }
+@keyframes badge-unlock { 0% { transform: scale(0) rotate(-180deg); } 70% { transform: scale(1.15) rotate(10deg); } 100% { transform: none; } }
+@keyframes confetti-fall {
+  0%   { opacity:1; transform: translateY(0) rotate(0); }
+  100% { opacity:0; transform: translateY(var(--h,16rem)) translateX(var(--dx,0)) rotate(var(--r,540deg)); }
+}
+@keyframes nudge { 0%,100% { transform:none; } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes count-up { from { --n: 0; } to { --n: var(--to, 100); } }
+
+/* 15. VISUALIZACIONES ANIMADAS (propósito pedagógico) --------------------- */
+/* 15a. Nube de puntos que se dibuja (muestreo / correlación): <circle class="dot" style="--i:3"> en SVG */
+.plot { width:100%; height:auto; background: var(--c-surface); border:1px solid var(--c-line); border-radius: var(--r-md); }
+.plot .axis { stroke: var(--c-ink-soft); stroke-width: 1.5; }
+.plot .gridline { stroke: var(--c-line); stroke-width: 1; stroke-dasharray: 3 4; }
+.plot .tick-label { fill: var(--c-ink-soft); font: 12px var(--font-body); }
+.plot .dot { fill: var(--c-info); stroke: var(--c-surface); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: dot-in 420ms var(--ease-pop) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.plot .dot--a { fill: var(--c-grp-a); } .plot .dot--b { fill: var(--c-grp-b); } .plot .dot--c { fill: var(--c-grp-c); }
+.plot .dot--outlier { fill: var(--c-accent); stroke: var(--c-ink); stroke-width: 2; }
+/* La línea se dibuja con pathLength="1" (independiente de la longitud real) */
+.plot .draw-line { fill: none; stroke: var(--c-accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw-line 1.4s var(--ease) both; animation-delay: var(--delay, 1s); }
+.plot .band { fill: var(--c-accent); opacity: .15; }
+@keyframes dot-in { from { opacity:0; transform: scale(0); } to { opacity:1; transform: none; } }
+@keyframes draw-line { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* 15b. Barra de potencia / tamaño de efecto: --value 0-100 con transición */
+.power { display:grid; gap:var(--sp-1); }
+.power__track { position:relative; height:2rem; border-radius:var(--r-pill); background: var(--c-surface-2); border:2px solid var(--c-line); overflow:hidden; }
+.power__fill { position:absolute; inset:0 auto 0 0; width: calc(var(--value, 0) * 1%); background: linear-gradient(90deg, var(--c-accent), var(--c-star-on) 60%, var(--c-primary)); transition: width 900ms var(--ease); }
+.power__target { position:absolute; top:-2px; bottom:-2px; left: calc(var(--target, 80) * 1%); width:4px; background: var(--c-ink); }
+.power__target::after { content: attr(data-label); position:absolute; top:50%; left:8px; transform:translateY(-50%); font-size:.85rem; font-weight:700; white-space:nowrap; background:var(--c-surface); padding:0 .3rem; border-radius:.25rem; }
+.power__value { font-family: var(--font-display); font-weight: 800; }
+
+/* 15c. Muestreo: cada .sample-dot cae al histograma con retardo --i */
+.dropzone { display:flex; align-items:flex-end; gap:3px; height: 11.5rem; padding: .5rem; overflow: hidden; border:1px solid var(--c-line); border-radius: var(--r-md); background: var(--c-surface); }
+.dropcol { flex:1; display:flex; flex-direction:column-reverse; gap:2px; align-items:center; min-width:0; }
+.sample-dot { width: min(100%, .6rem); aspect-ratio: 1; border-radius: 50%; background: var(--c-info); animation: drop-in 600ms cubic-bezier(.5,0,.8,.4) both; animation-delay: calc(var(--i,0) * 70ms); }
+.sample-dot.is-extreme { background: var(--c-accent); }          /* cola: más extremo que el observado */
+@keyframes drop-in { from { opacity:0; transform: translateY(-9rem); } to { opacity:1; transform:none; } }
+
+/* 15d. Convergencia (ley de los grandes números, IC que se estrecha) */
+.converge { stroke: var(--c-info); stroke-width: 3; fill: none; stroke-dasharray: 1; animation: draw-line 2.2s var(--ease) both; }
+.ci-bar { transform-origin: left center; animation: ci-shrink 1.6s var(--ease) both; }
+@keyframes ci-shrink { from { transform: scaleX(2.4); opacity:.5; } to { transform: none; opacity:1; } }
+
+/* 16. PRINT (Utfordringskort imprimible) ---------------------------------- */
+@media print {
+  body { background: #fff; color: #000; }
+  .no-print, .app-header, .btn, .challenge-card__actions { display: none !important; }
+  .challenge-card { box-shadow: none; border: 2px solid #000; break-inside: avoid; max-width: none; }
+  .challenge-card__head { background: #fff; color: #000; border-bottom: 2px solid #000; }
+  .challenge-card__head h2 { color: #000; }
+  .confetti { display: none; }
+  * { animation: none !important; }
+}
+@media (max-width: 40rem) {
+  .challenge-card__cols { grid-template-columns: 1fr; }
+  .container { width: min(100% - 1rem, 62rem); }
+}
+
+/* 17. PREFERS-REDUCED-MOTION ---------------------------------------------- */
+/* Regla general: todas las animaciones saltan al estado final (fill-mode both)
+   y las transiciones son instantáneas. Lo que era puro adorno (confeti,
+   pulso, temblor) se elimina. Lo pedagógico queda visible en su estado final:
+   puntos ya dibujados, línea completa, barra al valor, estrellas encendidas. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .confetti { display: none; }
+  .anim-pulse { animation: none !important; }
+  .count-up.is-counting { animation: none !important; --n: var(--to, 100); }
+  .sample-dot { animation: none !important; }
+}
+/* Equivalente manual para alternar desde un ajuste del juego: <html data-motion="off"> */
+:root[data-motion="off"] *, :root[data-motion="off"] *::before, :root[data-motion="off"] *::after {
+  animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important;
+}
+:root[data-motion="off"] .confetti { display: none; }
+:root[data-motion="off"] .count-up.is-counting { animation: none !important; --n: var(--to, 100); }
+
+/* ==========================================================================
+   18. TEMA NÓRDICO-DEPORTIVO (motivos con sentido didáctico)
+   Runas: SOLO futhark antiguo decorativo y aria-hidden. Usar: ᚠ ᚢ ᚦ ᚱ ᚲ ᚷ ᛒ ᛗ ᛚ.
+   PROHIBIDO (apropiados por extremistas o ambiguos): sonnenrad / sol negro,
+   cruz de Odín, othala, valknut, sowilo, algiz invertida, martillo-insignia.
+   ========================================================================== */
+@keyframes aurora { from { background-position: 0% 0, 0 0; } to { background-position: 100% 0, 0 0; } }
+
+.knot-divider { height: 1.25rem; margin: var(--sp-5) 0; background: var(--knot) repeat-x center / auto 100%; border: 0; }
+.rune-divider { display:flex; align-items:center; gap:var(--sp-3); color:var(--c-wood); font-size:1.4rem; letter-spacing:.5em; margin:var(--sp-5) 0; }
+.rune-divider::before, .rune-divider::after { content:""; flex:1; height:2px; background: linear-gradient(90deg, transparent, var(--c-wood-soft), transparent); }
+.rune { font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", serif; color: var(--c-wood); }
+
+/* Cronómetro / marcador deportivo */
+.stopwatch { display:inline-flex; align-items:center; gap:.6rem; padding:.35rem 1rem .35rem .5rem; border-radius:var(--r-pill); background:var(--c-fjord); color:#fff; border:3px solid var(--c-iron); font-family:var(--font-mono); font-weight:700; font-size:var(--fs-lg); font-variant-numeric:tabular-nums; }
+.stopwatch__dial { width:1.8rem; height:1.8rem; border-radius:50%; border:3px solid var(--c-aurora-1); position:relative; }
+.stopwatch__dial::after { content:""; position:absolute; left:calc(50% - 1.5px); top:12%; width:3px; height:38%; background:var(--c-aurora-1); transform-origin:50% 100%; animation: tick 60s linear infinite; }
+.stopwatch.is-low { border-color: var(--c-accent); }
+.stopwatch.is-low .stopwatch__dial { border-color: var(--c-accent); }
+.stopwatch.is-low .stopwatch__dial::after { background: var(--c-accent); }
+@keyframes tick { to { transform: rotate(360deg); } }
+.scorepanel { display:inline-flex; align-items:baseline; gap:var(--sp-3); padding:var(--sp-2) var(--sp-4); background:var(--c-fjord); color:#fff; border:3px solid var(--c-iron); border-radius:var(--r-md); font-family:var(--font-mono); }
+.scorepanel strong { color: var(--c-star-on); font-size: var(--fs-xl); }
+
+/* Yggdrasil = progreso. Cada .leaf se enciende (.is-on) al completar una ronda. */
+.tree { width: 100%; max-width: 15rem; height: auto; }
+.tree .trunk { fill: none; stroke: var(--c-wood); stroke-width: 5; stroke-linecap: round; }
+.tree .leaf { fill: var(--c-surface-2); stroke: var(--c-iron); stroke-width: 2; stroke-dasharray: 3 3; }
+.tree .leaf.is-on { fill: var(--c-primary); stroke: var(--c-primary-dark); stroke-dasharray: none; animation: leaf-grow 700ms var(--ease-pop) both; transform-box: fill-box; transform-origin: center; animation-delay: calc(var(--i, 0) * 200ms); }
+@keyframes leaf-grow { from { transform: scale(0); } to { transform: none; } }
+
+/* Nornas = azar: tres hilos (muchas trayectorias posibles) que se tejen */
+.norns { width:100%; height:auto; }
+.norns path { fill:none; stroke-width:4; stroke-linecap:round; stroke-dasharray:1; animation: draw-line 2s var(--ease) both; }
+.norns path:nth-child(1) { stroke: var(--c-info); }
+.norns path:nth-child(2) { stroke: var(--c-accent); animation-delay:.5s; }
+.norns path:nth-child(3) { stroke: var(--c-primary); animation-delay:1s; }
+
+/* Bifrost = puente datos -> conclusión (los arcos se iluminan en orden) */
+.bridge { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:var(--sp-3); }
+.bridge__end { padding:.4rem .9rem; border-radius:var(--r-md); border:2px solid var(--c-iron); background:var(--c-surface-2); font-weight:700; text-align:center; }
+.bridge svg { width:100%; height:auto; }
+.bridge svg path { fill:none; stroke-width:5; stroke-linecap:round; stroke-dasharray:1; animation: draw-line 1.6s var(--ease) both; }
+.bridge svg path:nth-child(1) { stroke: var(--c-grp-a); }
+.bridge svg path:nth-child(2) { stroke: var(--c-star-on); animation-delay:.25s; }
+.bridge svg path:nth-child(3) { stroke: var(--c-primary); animation-delay:.5s; }
+.bridge svg path:nth-child(4) { stroke: var(--c-info); animation-delay:.75s; }
+
+/* Odin/Mímir = reporte: pozo de sabiduría */
+.well { border:2px solid var(--c-info); border-radius:var(--r-lg); background: linear-gradient(180deg, var(--c-info-soft), var(--c-surface)); padding:var(--sp-4); }
+.well__title { display:flex; gap:.5rem; align-items:center; font-weight:800; color:var(--c-info); }
+
+/* Thor = potencia: destello al alcanzar la meta (añadir .is-strong a .power) */
+.power.is-strong .power__fill { animation: thunder 900ms ease-out 1 both; }
+.power.is-strong .power__value::after { content: " \26A1"; }
+@keyframes thunder { 0% { filter: brightness(1); } 15% { filter: brightness(2.4); } 30% { filter: brightness(1); } 45% { filter: brightness(1.8); } 100% { filter: none; } }
+
+/* Ragnarok = humor para errores (marrón/naranja, nunca rojo punitivo) */
+.callout--ragnarok { --_c: var(--c-wood); --_bg: var(--c-warn-soft); }
+.callout--ragnarok::before { content: "\1F6E1"; }
+
+/* Valkirias: sello de "hallazgo escogido" */
+.valkyrie-pick { display:inline-flex; align-items:center; gap:.4rem; padding:.1rem .7rem; border:2px solid var(--c-star-on-edge); border-radius:var(--r-pill); background:var(--c-warn-soft); font-weight:700; }
+.valkyrie-pick::before { content:"\2736"; color: var(--c-star-on-edge); }
+
+/* Tablón de madera para marcador y tarjeta */
+.scoreboard__team { border-top: 5px solid var(--c-wood); }
+.challenge-card { border-color: var(--c-wood); }
+.challenge-card__head { background: linear-gradient(120deg, var(--c-fjord), #11485A); border-bottom: 6px solid var(--c-wood); }
+.challenge-card__foot::before { content: "\16A0\00a0\16A2\00a0\16A6\00a0"; letter-spacing: .2em; color: var(--c-wood); }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header { animation: none !important; }
+  .stopwatch__dial::after { animation: none !important; transform: rotate(40deg); }
+  .norns path, .bridge svg path { animation: none !important; stroke-dashoffset: 0; }
+}
+:root[data-motion="off"] .app-header { animation: none !important; }
+:root[data-motion="off"] .stopwatch__dial::after { animation: none !important; transform: rotate(40deg); }
+:root[data-motion="off"] .norns path, :root[data-motion="off"] .bridge svg path { animation: none !important; stroke-dashoffset: 0; }
+
+/* ===== Lote 2A-2: glossar i bruk, tidsring, Kjerne/Ekstra ===== */
+.gterm { border-bottom:1px dotted currentColor; cursor:help; }
+.gterm:focus-visible { outline:3px solid #ffbf47; outline-offset:2px; border-radius:2px; }
+.gterm-pop { position:absolute; z-index:60; background:var(--c-surface, #fff); color:var(--c-text, #1b2a38); border:2px solid var(--c-fjord, #1f4e79); border-radius:8px; padding:.6rem .8rem; box-shadow:0 6px 18px rgba(0,0,0,.25); font-size:.9rem; line-height:1.35; }
+.gterm-pop[hidden] { display:none; }
+.tidsring { display:inline-flex; align-items:center; gap:.4rem; color:#fff; font-size:.85rem; }
+.tidsring svg { width:28px; height:28px; transform:rotate(-90deg); }
+.tidsring circle { fill:none; stroke-width:4; }
+.tidsring .bg { stroke:rgba(255,255,255,.3); }
+.tidsring .fg { stroke:#fff; stroke-linecap:round; transition:stroke-dashoffset .6s; }
+.tidsring.is-late .fg { stroke:#ffd166; }
+@media (prefers-reduced-motion: reduce) { .tidsring .fg { transition:none; } }
+.stepper li.is-extra { background:transparent; border:2px dashed rgba(255,255,255,.7); }
+.stepper li.is-extra[aria-current="step"] { background:#fff; color:var(--c-fjord); border-color:#fff; }
+.stepper li.is-extra small { font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-left:.3rem; font-size:max(12px, .7em); }
+.extra-offer { border:2px dashed var(--c-fjord, #1f4e79); border-radius:8px; padding:.6rem .8rem; margin:.6rem 0; }
+.extra-tag { display:inline-block; border:2px dashed currentColor; border-radius:999px; padding:0 .5rem; font-size:max(12px, .75em); font-weight:700; text-transform:uppercase; }
+.modechoice { display:flex; gap:.8rem; flex-wrap:wrap; }
+.modechoice label { flex:1 1 14rem; border:2px solid var(--c-fjord, #1f4e79); border-radius:8px; padding:.6rem .8rem; cursor:pointer; }
+.modechoice label.is-on { background:rgba(31,78,121,.1); }
+.rolebanner { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; background:rgba(31,78,121,.1); border-left:6px solid var(--c-fjord, #1f4e79); padding:.5rem .8rem; border-radius:8px; margin:.5rem 0; }
+.layer { margin:.6rem 0; }
+@media print { .gterm-pop, .tidsring { display:none !important; } }

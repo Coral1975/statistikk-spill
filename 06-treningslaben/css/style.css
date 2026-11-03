@@ -1,0 +1,97 @@
+/* Treningslaben AS: stiler spesifikke for spillet. Tokens og komponenter kommer fra ../_shared/estilo.css
+   (ikke omdefiner tokens her; bruk var(--c-...), var(--sp-...), var(--r-...)). */
+.content{padding-block:var(--sp-5) var(--sp-6)}
+.small{font-size:var(--fs-sm);color:var(--c-ink-soft)}
+.lead{font-size:var(--fs-lg);color:var(--c-ink-soft)}
+/* Foco programatico en el titulo al cambiar de pantalla (para lectores de pantalla): sin recuadro; ver tambien _shared/estilo.css */
+[data-focus]:focus,[data-focus]:focus-visible{outline:none;box-shadow:none}
+.apptitle{font:700 var(--fs-xl)/1.1 var(--font-display);color:#fff}
+.app-header nav{flex-basis:100%}
+.app-header .stepper{gap:.3rem}
+.app-header .stepper li{font-size:.85rem;padding:.15rem .6rem;font-weight:600}
+.hud{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center}
+.hud .scorepanel{padding:.15rem .8rem;border-width:2px}
+.hud .scorepanel strong{font-size:var(--fs-lg)}
+.hjelpchip small{color:#fff;opacity:.85}
+
+/* Oppgave / Slik gjør dere det / Dette leverer dere */
+.taskbox{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:var(--sp-4);padding:var(--sp-4);background:var(--c-primary-soft);border:2px solid var(--c-primary);border-left-width:8px;border-radius:var(--r-md)}
+.taskbox h3{font-size:var(--fs-sm);text-transform:uppercase;letter-spacing:.06em;color:var(--c-primary-dark);margin-bottom:var(--sp-1)}
+.taskbox p,.taskbox ol{margin:0}.taskbox ol{padding-left:1.2rem}
+@media(max-width:44rem){.taskbox{grid-template-columns:1fr}}
+
+/* Hjelp med pris */
+.helpbox{border:2px dashed var(--c-warn);background:var(--c-warn-soft);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);margin-block:var(--sp-3)}
+.helpbox__head{margin:0 0 var(--sp-2)}
+.helpbtn .price{font-weight:700;color:var(--c-accent);margin-left:.25rem}
+.toast{position:fixed;left:50%;bottom:1rem;transform:translate(-50%,2rem);max-width:min(92vw,34rem);background:var(--c-fjord);color:#fff;border:3px solid var(--c-wood);border-radius:var(--r-md);padding:.6rem 1rem;box-shadow:var(--shadow-2);opacity:0;pointer-events:none;transition:opacity var(--t-med) var(--ease),transform var(--t-med) var(--ease);z-index:50;font-weight:600}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+.helptable th,.helptable td{text-align:left}
+
+/* Rundehode med Yggdrasil */
+.roundhead{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--sp-3)}
+.roundhead h2,.roundhead h3{margin-bottom:var(--sp-1)}
+.roundhead .tree{width:5rem;flex:none}
+
+/* Skjemaer og valg */
+.fld{margin:.8rem 0;border:0;padding:0}
+.fld legend,.fld>label,fieldset>legend{font-weight:600;padding:0}
+input[type=text],input[type=number],select,textarea{font:inherit;color:var(--c-ink);background:var(--c-surface);min-height:2.75rem;padding:.4rem .7rem;border:2px solid var(--c-line);border-radius:var(--r-md);width:100%;max-width:100%}
+input[type=text]:focus-visible,input[type=number]:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--c-info)}
+.row input[type=text]{width:auto;flex:1}
+textarea{min-height:5rem}
+input[aria-invalid=true]{border-color:var(--c-accent)}
+fieldset{border:1px solid var(--c-line);border-radius:var(--r-md);margin:.8rem 0;padding:var(--sp-3) var(--sp-4)}
+.opt{display:inline-flex;align-items:center;gap:.4rem;min-height:2.75rem;margin:.2rem .4rem .2rem 0;padding:.3rem .8rem;border:2px solid var(--c-line);border-radius:var(--r-pill);background:var(--c-surface);cursor:pointer;transition:background var(--t-fast),border-color var(--t-fast)}
+.opt.block{display:flex;border-radius:var(--r-md)}
+.opt.big{font-size:var(--fs-lg)}
+.opt:has(input:checked){border-color:var(--c-primary);background:var(--c-primary-soft);font-weight:600}
+.opt input{width:1.2rem;height:1.2rem;min-height:0;accent-color:var(--c-primary)}
+.confidence{margin-top:var(--sp-3)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+.grid6{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.6rem}
+@media(max-width:560px){.grid3{grid-template-columns:1fr}}
+.linkbtn{font:inherit;background:none;border:0;color:var(--c-info);text-decoration:underline;cursor:pointer;min-height:2.75rem}
+
+/* Tabeller og tekst */
+table{border-collapse:collapse;width:100%;margin:.5rem 0}
+th,td{border:1px solid var(--c-line);padding:.4rem .6rem;text-align:left}
+thead th{background:var(--c-surface-2)}
+caption{text-align:left;font-weight:700;padding:.3rem 0}
+.stats td{text-align:right}
+.matrix td,.matrix th{vertical-align:top}
+/* minmax(0,...) deja que la columna de valores se encoja (antes max-content/1fr desbordaba la tarjeta en 390 px) */
+.dl{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:.3rem 1rem;margin:0}
+.dl dt{font-weight:700;overflow-wrap:anywhere}.dl dd{margin:0;overflow-wrap:anywhere;min-width:0}
+@media(max-width:30rem){.dl{grid-template-columns:minmax(0,1fr)}.dl dt{margin-top:.5rem}.dl dt:first-child{margin-top:0}}
+.ok{color:var(--c-good);font-weight:600}.warn{color:var(--c-warn);font-weight:600}.info{color:var(--c-info)}
+.okmark{color:var(--c-good);font-size:.9rem}.badmark{color:var(--c-accent);font-size:.9rem}
+.skeptic{background:var(--c-warn-soft);border-radius:var(--r-md);padding:.5rem .8rem;border:1px dashed var(--c-warn)}
+details.card>summary,details.jam>summary{cursor:pointer;font-weight:700;min-height:2.75rem;display:list-item;padding-block:.5rem}
+.rot{margin-block:var(--sp-3)}
+.quote{font-style:italic;white-space:pre-wrap}
+code{background:var(--c-surface-2);padding:0 .3rem;border-radius:4px}
+.powerpanel .power{margin:.5rem 0}
+svg.ci{width:100%;max-width:440px;height:auto}
+canvas.lgrid{width:100%;max-width:500px;height:auto;border:1px solid var(--c-line);background:var(--c-surface)}
+.bridge{margin-block:var(--sp-3)}
+.bridge svg{max-height:5rem}
+.foot{padding-block:0 var(--sp-6);color:var(--c-ink-soft);font-size:var(--fs-sm)}
+.challenge-card .badge-grid{margin-top:var(--sp-2)}
+.challenge-card__result small{font-size:var(--fs-md);font-weight:500}
+
+[hidden]{display:none!important}
+
+@media(prefers-reduced-motion:reduce){.toast{transition:none}.kt-bar span,.opt{transition:none}}
+@media print{.toast,.foot,.no-print,#boardBtn,.hud,.taskbox,.stepper{display:none!important}}
+.optl{font-weight:600;color:var(--c-muted,inherit)}
+
+/* Claridad 6C: linea fija «programmet», bloque «Hva nå?», glosario */
+.programline{margin:var(--sp-1) 0 0;font-size:var(--fs-md);color:var(--c-ink-soft);font-weight:600}
+.whatnow{margin-top:var(--sp-5);padding:var(--sp-4);background:var(--c-primary-soft);border:3px solid var(--c-primary);border-radius:var(--r-md)}
+.whatnow h3{margin:0 0 var(--sp-1);font-size:var(--fs-lg);color:var(--c-primary-dark)}
+.whatnow p{margin:0 0 var(--sp-3);font-weight:600}
+.whatnow .row{margin:0}
+.btn--cta{box-shadow:var(--shadow-2);font-weight:800}
+@media(max-width:30rem){.btn--cta{width:100%;justify-content:center}}
+.glossary .dl{margin-top:var(--sp-2)}

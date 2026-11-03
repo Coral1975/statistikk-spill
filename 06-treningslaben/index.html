@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Treningslaben AS</title>
+<meta name="description" content="Utfordring i hypotesetesting for idrettsvitenskap: styrke, type I- og type II-feil, effektstørrelse og rapportering.">
+<!-- Delt designsystem (../_shared) + spillets egen CSS -->
+<link rel="stylesheet" href="../_shared/estilo.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Hopp til innholdet</a>
+<div id="app"><noscript><p>Denne utfordringen krever JavaScript.</p></noscript></div>
+<footer class="foot container"><p>Ingen personnavn lagres. Utfordringen teller ikke på karakteren. Alt er fiktivt og simulert. Hvis læreren har slått på klassetavla, sendes bare lagnavn, stjerner, sluttpoeng og hvor mange ganger hver type hjelp er brukt, og modus – og bare når dere selv trykker «Send».</p>
+<p><button type="button" class="linkbtn" id="restartBtn">Start på nytt</button> <button type="button" class="linkbtn" id="renameBtn">Bytt lagnavn</button></p></footer>
+<script src="../_shared/errores.js"></script>
+<script src="../_shared/alias.js"></script>
+<script src="../_shared/fx.js"></script>
+<script src="../_shared/score.js"></script>
+<script src="../_shared/help.js"></script>
+<script src="../_shared/rapport.js"></script>
+<script src="../_shared/glossary.js"></script>
+<script src="../_shared/tidsring.js"></script>
+<script src="js/config.js"></script>
+<script>Errores.init({ keys: [TL_CONFIG.storageKey, TL_CONFIG.bestKey] });</script>
+<script src="js/strings.js"></script>
+<script src="js/lock.js"></script>
+<script src="js/data.js"></script>
+<script src="js/secrets.js"></script>
+<script src="js/stats.js"></script>
+<!-- Marcador de clase OPCIONAL: si el archivo falta o la URL esta vacia, el juego sigue sin el -->
+<script src="../_shared/marcador/config.js"></script>
+<script src="../_shared/marcador/klassetavla.js"></script>
+<script src="js/game.js"></script>
+<script>
+  document.getElementById('restartBtn').addEventListener('click', function () {
+    if (window.confirm(window.TL_T.restartConfirm)) {
+      try { localStorage.removeItem(window.TL_CONFIG.storageKey); } catch (e) { /* ok */ }
+      location.reload();
+    }
+  });
+</script>
+</body>
+</html>
